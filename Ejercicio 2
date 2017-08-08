@@ -1,0 +1,25 @@
+## EJERCICIO
+##Crear 3 variables de 4 entradas. Las variables de nombre:
+##facultad(economia, ingenieria, arq y derecho)
+##licenciatura(actuaria, ing civil, arquitectura, derecho)
+##calificacion alumnos((6,4,10,8))
+####verificar con r que tipo de variables son
+##numerico y caracter
+##borrar las variables facultad y licenciatura
+##graficar con pie la variable calificacion
+##incorporar los diversos argumentos utilizados en clase
+
+facultad<-c("Economia","Ingenieria", "Arquitectura","Derecho")
+licenciatura<-c("Actuaria","Ing Civil","Arquitectura","Derecho")
+califalumno<-c(6,4,10,8)
+
+class(facultad)
+class(licenciatura)
+class(califalumno)
+
+
+rm(facultad)
+rm(licenciatura)
+
+pie(califalumno)
+pie(califalumno,main="Calificación de Alumnos",sub="Fuente: UAEMex",col=c("blue","red","pink","green"),radius=1.0,clockwise = TRUE,lty=12) 
