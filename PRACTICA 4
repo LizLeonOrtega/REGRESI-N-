@@ -1,0 +1,74 @@
+z<-11:30
+dim(z)<-c(5,4)
+colnames(z)<-c("Toluca","Pachuca","Guadalajara","Monterrey")
+rownames(z)<-c("Escuela1","Escuela2","Escuela3","Escuela4","Escuela5")
+
+#para pegar un renglon a la matriz
+z<-rbind(z,c(4,5,6,7))
+z
+rownames(z)<-c("Escuela1","Escuela2","Escuela3","Escuela4","Escuela5","Escuela6")
+z
+#para pegar una columna a la matriz
+z<-cbind(z,c(14,25,36,47,99,81))
+z
+colnames(z)<-c("Toluca","Pachuca","Guadalajara","Monterrey","Jocotitlan")
+z
+
+z["Escuela1","Jocotitlan"]<-28#editar la matriz en una posicion
+z
+edit(z)
+
+############################# MULTIPLICACION DE MATRICES ##################################
+j%*%i
+############################### TRANSPUESTA DE UNA MATRIZ #################################
+t(i)
+############################## data frame"!!!
+nombres<-c("Sergio","Juan","Rocio","Jessica")
+edad<-c(30,43,21,18)
+altura<-c(170,165,175,172)
+salario<-c(3000,4500,2200,4300)
+basem<-data.frame(nombres,edad,altura,salario)
+View(basem)
+
+basem[4,3]<-178#asigno 148 a renglon 4 columna 3
+basem$salario*2.2->basem$salario#multiplar por 2.2 la columna salario y volverla a asigna a salario
+basem
+
+peso<-c(83.2,75.2,69.3,70.5)#nuevo vector
+basem<-data.frame(nombres,edad,altura,salario,peso)
+basem
+basem$peso*1.2->basem$peso
+basem
+
+round(basem$peso,3)->basem$peso #redondeo
+basem 
+
+basem$escol<-c("prepa","lic","ninguno","prim")
+basem$sexo<-c(1,1,2,2)
+basem
+############################# FUNCION TABLE ###########################
+table(basem$sexo)
+attach(basem)#iniciar llama de las varables que ya se guardaron en la base
+table(sexo)
+detach(basem)#terminar el llamade de las varables que ya se guardaron en la base
+
+
+############################ PAQUETERIAS ################################
+
+###Instalar paqueterias de internet
+install.packages("foreign")
+install.packages("questionr")
+install.packages("car")
+
+#Instalacion multiple desde internet
+installed.packages(c("foreign","questionr","car"))
+
+#FOREING sirve para exportar o importar bases de datos
+#QUESTIONR para expandir frecuencias de bases de datos muestrales
+#CAR es para regresion
+###DENTRO DE CADA PAQUETE VIENEN MULTIPLES FUNIONES QUE SOLO LAS PODEMOS USAR CUANDO MANDAMOS A
+###LLAMAR UNA PAQUETERIA INTSLADA, library() Y require() son funciones equivalentes
+
+library(foreign)
+library(questionr)
+library(car)
