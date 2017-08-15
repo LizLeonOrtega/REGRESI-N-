@@ -1,0 +1,25 @@
+################################## PRACTICA 5 ##################################################
+
+require(foreign)
+mti2015<-read.dbf("C:/Users/Sala-D15/Desktop/mti2015_05_17_sdem_precodificado.DBF")
+table(mti2015$SEX)#AGRUPA CUANTOS HOMBRE Y MUJERES HAY EN LA BASE DE DATOS
+
+install.packages("questionr")
+require(questionr)
+wtd.table(mti2015$SEX, weights = mti2015$FAC_MTI)
+ls(mti2015)#despliega el nombre de las variables que contiene la base de datos
+sum(mti2015$FAC_MTI)
+
+table(mti2015$R_DEF_ENOE)
+table(mti2015$CS_P12)
+wtd.table(mti2015$CS_P12, weights=mti2015$FAC_MTI)
+wtd.table(mti2015$EDA, mti2015$CS_P12,weights=mti2015$FAC_MTI)
+
+edomex<-subset(mti2015,mti2015$ENT==15)
+edomexmuj<-subset(mti2015,mti2015$ENT==15 & mti2015$SEX==2)
+
+agzac<-subset(mti2015,mti2015$ENT=="01" | mti2015$ENT==32)
+table(agzac$ENT)
+
+as.numeric(mti2015$ENT)#convertir a numerico un caracter
+class(mti2015$ENT)
