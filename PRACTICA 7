@@ -1,0 +1,45 @@
+############################################### MANERA CORTA #############################################
+
+temporal<-tempfile()
+download.file("http://www.beta.inegi.org.mx/contenidos/proyectos/enchogares/modulos/mti/2015/microdatos/mti2015_bases_conapo_dbf.zip",temporal)
+files=unzip(temporal,list=TRUE)$Name
+unzip(temporal,files=files[grepl("dbf",files)])
+files
+library(foreign)
+mti <- data.frame(read.dbf( "mti2015_05_17_sdem_precodificado.DBF"))
+
+mti$RAMA2 [mti$RAMA == 1]<-1
+mti$RAMA2 [mti$RAMA == 2 | mti$RAMA == 3]<-2
+mti$RAMA2 [mti$RAMA == 4 | mti$RAMA == 5]<-3
+mti$RAMA2 [mti$RAMA == 6 | mti$RAMA == 7]<-4
+table(mti$RAMA2)
+table(mti$EDA)
+
+#*********************************** EJERCICIO ******************************
+#Recodificar la variable EDA en una nueva variable que se llame GPOEDA y etiquetarla
+#Esta recodificación debe quedar en 4 lineas del script
+#La recodificación es la siguiente:
+
+mti15$EDA <-as.numeric(as.character(mti$EDA))
+table(mti$EDA)
+
+mti15$EDA <- as.numeric(mti15$EDA)
+
+## Recodificar el nombre de la variable
+install.packages("plyr")
+library(plyr)
+mti15$GPOEDA[mti15$EDA >= 5 & mti15$EDA <= 7] <- 1
+mti15$GPOEDA[mti15$EDA >= 8 & mti15$EDA <= 11] <- 2
+mti15$GPOEDA[mti15$EDA >= 12 & mti15$EDA <= 14] <- 3
+mti15$GPOEDA[mti15$EDA >= 15 & mti15$EDA <= 17] <- 4
+table(mti15$GPOEDA)
+mti15$GPOEDA<- factor(mti15$GPOEDA, levels = c(1, 2, 3, 4), labels = c("Niñ@s","Pre-Ado","Adolescente", "Joven"))
+  
+require(questionr)
+t<-wtd.table(mti15$GPOEDA,weights=mti15$FAC_MTI)
+t
+
+write.csv(t,file="Practica1.csv")
+
+
+#email prof: serobles99@gmail.com
