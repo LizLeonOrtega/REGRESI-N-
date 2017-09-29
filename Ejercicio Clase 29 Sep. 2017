@@ -1,0 +1,46 @@
+######### EJERCICIO DE CLASE ##############
+# Se busca la relacion de estatura (x) con longitud del salto (y)
+
+x<- c(170,172,173,174,174,175,176,177,180,180,180,180,180,181,181,182,182,182,182,184,184,185,186,188)
+y<- c(.84,1.31,1.42,1.03,1.07,1.08,1.04,1.8,1.45,1.60,1.61,2.13,2.15,.84,1.43,.90,1.81,1.94,2.68,1.49,2.52,3.00,1.87,3.08)
+
+#1)Determine la ec de la recta de regresion estimada
+#2)Calcule una estimacion puntual del salto horizontal promedion cuando la estatura de la pesona es de 182
+#3)Calcule los valores de los residuos de min cuadrado de las 4 observaciones con las cuales la estatura es de 182
+#4)¿Que proporcion de la variacion observada en el salto horizontal es atribuida a la relacion de reg lineal simple?
+ #R= 45% es la ,ultiple r-squared
+### 1)
+
+Sxx <- sum((x)^2)-((sum(x))^2)/24               
+Sxy <- sum(x*y)-((sum(x))*(sum(y)))/24
+#*******************mod1<-lm(y~x)
+#*******************summary(mod1)
+
+
+beta1 <- Sxy/Sxx
+beta0 <- mean(y)-(beta1*mean(x))
+
+### 2)
+
+y182<- beta0 + beta1*(182)
+estpun<-y182
+
+### 3)
+#la distancia que hay entre el valor del estimador conla recta de regresion
+
+valor1<-.90-estpun
+valor1
+valor2<-1.82-estpun
+valor2
+valor3<-1.92-estpun
+valor3
+valor4<-2.68-estpun
+valor4
+
+###4)
+
+#names(mod1)
+
+summary(mod1)
+
+plot(y~x, xlab="Estatura", ylab="Salto Horizontal",xlim=c(160,190),ylim=c(.80,3.2),main="Grafica Diagrama de Dispersión")
