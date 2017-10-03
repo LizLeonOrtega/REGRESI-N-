@@ -1,0 +1,260 @@
+############################################# EJERCICIO 16) ###################################################
+#***El articulo "Characterization of Highway Runoff in Austin, Texas, Area"
+#(J. of Envir. Engr., 1998: 131-137) incluye una grafica de dispersión junto
+#con una recta de mínimos cuadrados, de x= volumen de presipitación pluvial(m^3)
+#y y= volumen de escurrimiento (m^3) en un lugar particular. Los sig valores
+# fueron tomados de la grafica.
+#x=(5,12,14,17,23,30,40,47,55,67,72,81,96,112,127)
+#y=(4,10,13,15,15,25,27,46,38,46,53,70,82,99,100)
+
+x<-c(5,12,14,17,23,30,40,47,55,67,72,81,96,112,127)
+y<-c(4,10,13,15,15,25,27,46,38,46,53,70,82,99,100)
+
+#a)Sera que una grafica de dispercion de los datos apoya el uso del modelo de 
+#regresion lineal simple?
+plot(x~y)
+
+#b)Calcule las estimaciones puntuales de la pendiente y la intercepcion de la recta
+#de regresion de poblacion.
+Sxx <- sum((x)^2)-((sum(x))^2)/15               
+Sxy <- sum(x*y)-((sum(x))*(sum(y)))/15
+
+beta1 <- Sxy/Sxx
+beta0 <- mean(y)-(beta1*mean(x))
+
+ec<-beta0+beta1*(x)
+
+#c)Calcule una estimacion puntual del volumen de escurrimieto promedio verdadero
+#cuando el volumen de precipitacion pluvial es de 50.
+y50<- beta0 + beta1*(50)
+y50
+
+#d)Calucle una estimacion puntual de la desviacion estandar s
+y0<-beta0+beta1*(x)
+SSE<-sum((y-y0)^2)
+sigma2<-(SSE/13)
+sigma<-sqrt(sigma2)
+
+ecsigma<-beta0+beta0*(sigma)
+
+
+#e)Que proporcion de la variación observada del volumen de escurrimiento puede atribuirse
+# a la relacion de regresion lineal simple entre escurrimiento y la precipitacion pluvial?
+
+#R = La relación es positiva, nos dice que de cada unidad que incremente el volumen de precipitación 
+#pluvial, se genera un aumento de 0.8269 en el volumen de escurrimiento
+#la variación que no puede ser atribuida a nustra regresión lineal es SSE= 357.011, en otras palabras 
+#esta cantidad sigue sin  poder ser interpretada por el modelo de Regresión lineal encontrado
+
+############################################# EJERCICIO 17) ###################################################
+#***El agregado fino de concreto, hecho a partir de un agregado secundario clasificado de manera uniforme y una pasta
+#de cementeo-agua, es beneficiso en las zonas propensas a las lluvias excesivas debido a sus excelentes propiedades de
+#drenaje. El articulo "Pavement Thickness Design for No-Fines Concrete Parking Lots" (J. of Trans. Engr., 1995:476-484)
+#empleo un analisis de minimos cuadrados en el estudio de como y=porosidad(%) se relacionan con x= peso unitario
+#(por pie cubico) en muestras de concreto. Considere los sig datos representativos
+#x=(99.0,101.1,102.7,103.0,105.4,107.0,108.7,110.8,112.1,112.4,113.6,113.8,115.1,115.4,120.0)
+#y=(28.8,27.9,27.0,25.2,22.8,21.5,20.9,19.6,17.1,18.9,16.0,16.7,13.0,13.6,10.8)
+#Syi=299.8, Sxi=1640.1, Sxi^2=179849.73, Sxiyi=32308.59, Sy^2i=6430.06
+x<-c(99.0,101.1,102.7,103.0,105.4,107.0,108.7,110.8,112.1,112.4,113.6,113.8,115.1,115.4,120.0)
+y<-c(28.8,27.9,27.0,25.2,22.8,21.5,20.9,19.6,17.1,18.9,16.0,16.7,13.0,13.6,10.8)
+
+#a)Obtenga la ecuacion de la recta de regresion estimada. A continuacion, cree un grafico de despercion de datos y el
+#grafico de la recta estimada. Sera que el modelo de la relacion puede explicar una gran parte de la variacion observada en y?
+mod1<-lm(y~x)
+summary(mod1)
+
+Sxx <- sum((x)^2)-((sum(x))^2)/15               
+Sxy <- sum(x*y)-((sum(x))*(sum(y)))/15
+
+beta1 <- Sxy/Sxx
+beta0 <- mean(y)-(beta1*mean(x))
+
+ec <- Beta0 + Beta1*(x)
+
+plot(x,y, col = "blue", xlab="Peso Unitario (por pie cúbico)", ylab="Porosidad (%)", sub = "Fuente: ElaboraciÓn propia")       
+par(new=TRUE)
+plot(ec1, type = "l", col = "black" ,xlab="", ylab="",  axes=FALSE)                                                            
+title(main="GRAFICA DE DISPERSIÓN")
+
+#b)Interprete la pendiente de la recta de minimos cuadrados
+#R=Visulaizando la grafica podemos ver que la recta de regresion tiene pendiente negativa, asi pues se tiene una relacion negatica
+#entre las variables,con cada peso unitario (por pie cúbico) que se incremente, se va a reducir en un 0.90473 la porosidad.
+
+#c)Que sucede si la estimacion lineal se utiliza para predecir la pososidad cuando el peso unitario es de 135? Por que esto
+#no es una buena idea
+y135<- beta0 + beta1*(135)
+y135
+#R = Si el precio unitario aumenta a 135, se tendra una porosidad de -3.2287, esto no es bueno, ya que la disminucion que se tiene
+#es demasiado grande
+
+
+#d)Calcule los residuos correspondientes a las dos primeras observaciones
+y1<- beta0 + beta1*(99.0)
+estpun1<-y1
+y2<- beta0 + beta1*(101.1)
+estpun2<-y2
+
+valor1<-28.8-estpun1
+valor1
+valor2<-27.9-estpun2
+valor2
+
+#e)Calcule e interprete una estimacion puntual de s
+y0<-beta0+beta1*(x)
+SSE<-sum((y-y0)^2)
+sigma2<-(SSE/13)
+sigma<-sqrt(sigma2)
+sigma
+
+# R = la variación esperada es de 0.938035, con lo cual podemos teniendo asi una dispersión no  muy grande
+
+#f)Que porporcion de la variacion observada en la pososidad se puede atribuir a la relacion lineal aproximada entre el peso
+#unitario y la pososidad?
+
+# R = Con el resultado de SSEafirmamos que la variación de "y" sin ser atribuida al modelo es 11.43
+
+############################################# EJERCICIO 18) ###################################################
+#***Durante la ultima decada el polvo de caucho se ha utilizado en cemento asfaltico para mejorar el rendimiento.
+#El articulo "Experimental Study of Recycled Rubber-Filled High-Strength Concrete" (Magazine of Concrete Res., 
+# 2009: 549-556) incluye una regresion de y=esfuerzo axial(MPa) en x=esfuerzo cubico (MPa) basada en los sig 
+# datos de muestra
+#x=(112.3,97.0,92.7,86.0,102.0,99.2,95.8,103.5,89.0,86.7)
+#y=(75.0,71.0,57.7,48.7,74.3,73.3,68.0,59.3,57.8,48.5)
+x<-c(112.3,97.0,92.7,86.0,102.0,99.2,95.8,103.5,89.0,86.7)
+y<-c(75.0,71.0,57.7,48.7,74.3,73.3,68.0,59.3,57.8,48.5)
+
+#a)Obtenga la ecuacion de la recta de minimos cuadrados e enterprete su pendiente.
+Sxx <- sum((x)^2)-((sum(x))^2)/10               
+Sxy <- sum(x*y)-((sum(x))*(sum(y)))/10
+
+beta1 <- Sxy/Sxx
+beta0 <- mean(y)-(beta1*mean(x))
+
+ec<- Beta0 +Beta1*(x)
+
+plot(x, y, col= "red" )
+par(new= TRUE)
+plot(y1, type = "l" ,col= "blue" )
+
+#R = LA pendiente que resulta del modelo de regresion tiene una pendiente positiva, además podemos visualizar que
+#por cada unidad que se aumente el esfuerzo cúbico aumentará en 0.9869 el esfuerzo axial.
+
+
+#b)Calcule e interprete el coeficiente de determinacion
+y0<-beta0+beta1*(x)
+SSE<-sum((y-y0)^2)
+y2<-sum(y^2)
+yi<-sum(y)
+SST<-y2-((yi)^2/10)
+r2<-1-(SSE/SST)
+r2
+
+#R=El coeficiente de determinacion, no queire dar a enteder que la relacion que hay entre las dos variables
+# que en si seria el grado de relacion lineal que comparten.
+
+#c)Calcule e interprete una estimacion de la desviacion estandar s del error en el modelo de reg. lineal simple
+sigma2<-(SSE/8)
+sigma<-sqrt(sigma2)
+sigma
+#R=Sisma quiere adar a conocer la variacion que existe entre las variables, y una vez determinado este valor
+#podemos darnos cuenta de que tan dispersos estan los datos de la recta de regresion.
+
+############################################# EJERCICIO 19) ###################################################
+#***Los siguientes datos son representativos de los reportados en el articulo "An Experimental Correlation
+#of Nitrogen Emissions from Power Boilers Based on Field Data" (J. of Engr. for Power, julio de 1973: 
+#165-170), con x = tasa de liberacion debido a area de quemador (MBtu/h-pie^2) y y = tasa de emision de NO (ppm):
+
+x<-c(100,125,125,150,150,200,200,250,250,300,300,350,400,400)
+y<-c(150,140,180,210,190,320,280,400,430,440,390,600,610,670)
+
+#a)Suponiendo que el modelo de regresión líneal simple es valido obtena la estimacion de minimos cuadrados de la
+#recta de regresio verdadera.
+
+Sxx <- sum((x)^2)-((sum(x))^2)/14               
+Sxy <- sum(x*y)-((sum(x))*(sum(y)))/14
+
+beta1 <- Sxy/Sxx
+beta0 <- mean(y)-(beta1*mean(x))
+
+ec <- Beta0 +Beta1*(x)
+#b) ¿Cual es la estimacion de la tasa de eision de NO esperada cuando la tasa de liberacion debido al area del 
+# quemador es igual a 225?
+
+y225<- beta0 + beta1*(225)
+y225
+#R=La tasa de emisión de NOx cuando la tasa de liberación debido al área del quemador es 225 es 339.52
+ 
+#c)Estime la cantidad en la cual espera que cambie la tasa de emisiones de NO cuando la tasa de liberacion debida
+#al area del quemado disminuye en 50.
+
+y175<- beta0 + beta1*(175)
+y175
+
+#d)¿Utilizaria la recta de regresion estimada para predecir la tasa de emision con una tasa de liberacion de 500? 
+#¿Por qué sí, o por qué no?
+y500<- beta0 + beta1*(500)
+y500
+#R=Dado que solo probando este valor en la ecuacion ´podemos analizar su comprtamiento, si.
+
+############################################# EJERCICIO 24) ###################################################
+#***Las especies de diatomeas invasivas Didymmosphenia geminara tienen potencial para causar sustanciales daños 
+#ecologicos y economicos en los rios. En el articulo "Substrate Characte-ristics Affect Colonization by the 
+#Bloom-Forming Diatom Didymosphenia geminata" (Aquatic Ecology, 2010: 33-40) se describe una investigacion del 
+#comportamiento de la colonia.
+#Un aspecto de particular interes fue si y = densidad de la colonia estaba relacionada con x = area superficial
+#de la roca. El articulo contiene un diagrama de dispersion y el resumen de un analisis de regresion. A continuacion 
+#se presentan los datos representativos:
+
+x<-c(50,71,55,50,33,58,79,26,69,44,37,70,20,45,49)
+y<-c(152,1929,48,22,2,5,35,7,269,38,171,13,43,185,25)
+
+#a)Ajuste el modelo de regresion lineal simple a estos datos, prediga la densidad de la colonia cuando el area 
+#superficial = 70 y cuadno el area superficial = 71 y calcule los residuos correspondientes. ¿Como se comparan 
+#entre sí?
+Sxx <- sum((x)^2)-((sum(x))^2)/15               
+Sxy <- sum(x*y)-((sum(x))*(sum(y)))/15
+
+beta1 <- Sxy/Sxx
+beta0 <- mean(y)-(beta1*mean(x))
+
+y70<- beta0 + beta1*(225)
+y70
+
+y71<- beta0 + beta1*(175)
+y71
+
+#b)Calcule e inteprete el coeficiente de determinación
+y0<-beta0+beta1*(x)
+SSE<-sum((y-y0)^2)
+y2<-sum(y^2)
+yi<-sum(y)
+SST<-y2-((yi)^2/13)
+r2<-1-(SSE/SST)
+r2
+
+#c)La segunda observacion tiene un valor y muy extremo y (en el conjunto de datos completo que consta de 72 observaciones,
+# habia dos de estos). Esta observacion puede haber tenido un impacto sustancial en el auste del modelo y en las 
+#conclusiones posteriores. Elimine y vuelva a calcular la ecuacion de recta de regresion estimada. 
+#¿Sera que difiere sustancialmente de la ecuacion antes de la eliminacion?
+#¿Cual es el impacto en r^2 y en s?
+
+x <- c(50, 55, 50, 33, 58, 79, 26, 69, 44, 37, 70, 20, 45, 49) 
+y <- c(152, 48, 22, 2, 5, 35, 7, 269, 38, 171, 13, 43, 185, 25)
+
+sxx1 <- sum(x1^2)- ((sum(x1))^2)/14
+sxy1 <- sum(x1*y1)-((sum(x1)*sum(y1))/14
+
+beta1 <- Sxy/Sxx
+beta0 <- mean(y)-(beta1*mean(x))
+
+ec<- beta0 +beta1*(x)
+
+SSE<- sum((y1-ec)^2)
+sigma2<- (SSE1/12))
+sigma<- sqrt(sigma2)
+SST<- sum(y^2)- ((sum(y))^2)/length(x)
+r2 <- 1-(SSE/SST)
+
+#R = Dado el cambio que se tiene podemos notar que para la segunda observacion se tendra una gran modificación en nuestro
+#modelo, el cual consecuente mente causara una variacion en la sigma anterior asi como tambien el el coeficiente de
+#determinacion
