@@ -1,0 +1,85 @@
+
+### Ejercicio clase: en una financiera se quiere evaluar a los corredores de diferentes empresas,
+### la oferta y desempeño de cada corredor se evalua en 6 areas, empleando para cada una de las 
+### areas una escala de 0 a 5 , tres de las areas evaluadas son ejecucion en la operacion, 
+### facilidad de uso y gama de ofertas. Un 5 es la mejor calificacion en las diferentes areas.
+### En los siguientes datos se presentan las puntuaciones obtenidas.
+corredor<-c("wall st","etrade1","etrade2","pre trade","track", "water house", "brown","br america","merill lynch","strogn funds")
+operacion<-c(3.7,3.4,2.5,4.8,4,3,2.7,1.7,2.2,1.4)
+uso<-c(4.5,3,4,3.7,3.5,3,2.5,3.5,2.7,3.6)
+gama<-c(4.8,4.2,4,3.4,3.2,4.6,3.3,3.1,3,2.5)
+califtotal<-c(4,3.5,3.5,3.5,3.5,3.5,3,3,2.5,2)
+###### ESTA NO#####
+#a)Determinar la ecuacion de regresion estimada que se puede usar para predecir la calificacion
+#total segun las evaluaciones obtenidas.
+
+#b) Emplee la prueba F para determinar la significamcia global de la relacion, el nivel de significancia
+# que se requiere es de 95% ¿Cual es su conclusion?
+
+calificacion<-data.frame(califtotal,operacion,uso,gama)
+modelo<-lm(califtotal~operacion+uso+gama)
+summary(modelo)
+#La ecuación del modelo de regresion es: .34510+ .25482x1 + .13249x2 + .45852x3
+
+anova(modelo)
+#Se observa que la variable dependiente califtotal tiene un estadistico F de 29.1789 lo que es un buen
+#estadistico debido a que es mayor a 1, para el p-value 0.05 igual que la variable gamma tiene un esta
+#distico F de 13.8545 y los p-values igual a la variable uso que tiene un estadistico F de 3.4222 y los
+#p-values z a 
+
+#c) elimine cualquiera de las var indep que no sea significativa para la ec de regresion estimada,
+#¿Cual es la ecuacion de regresion estimada que recomienda, compare las r2 de los modelos.
+calificacion1<-data.frame(califtotal,operacion,gama)
+modelo1<-lm(califtotal~operacion+gama)
+summary(modelo1)
+
+anova(modelo1)
+
+#Dado que en el modelo anterior se obtiene una r2 de .8284 y en este modelo se obtiene una de .8311
+#seobserva que no hay un gran cambio por lo tanto la comparacion de las r2 no es un buen indice para 
+#determinar cual de las dos es mejor de utizar, en concluson la r2 es limitada al utilizarla
+
+#****************** aplicando las tres pruebas*************************
+names(modelo1)
+
+calificacion1$fitted.modelo1<-fitted(modelo1)
+calificacion1$residuals.modelo1<-residuals(modelo1)
+calificacion1$rstudent.modelo1<-rstudent(modelo1)
+
+#******SUPUESTO DE NORMALIDAD
+shapiro.test(calificacion1$rstudent.modelo1)
+
+qqnorm(calificacion1$rstudent.modelo1)
+qqline(calificacion1$rstudent.modelo1)
+
+#*********** homocedasticidad supuesto
+install.packages("lmtest")
+require(lmtest)
+bptest(modelo1)
+
+# supuesto de independencia o autocorrelacion
+dwtest(modelo1,alternative="two.sided")
+
+coefficients(modelo1)
+
+############################## EJERCICIO 27 DE OCTUBRE DE 2017 ##############################
+#Plantear un mrm de minimo 4 variables independientes
+#a este modelo que planteen van a realizar lo siguiente:
+#1) analizar la anova para conocer labondad de ajuste
+#2) a traves de los coeficientes detectar las var indep no significativas
+#3) analizar la r2 para conocer la variabilidad del modelo
+#4) En dado caso de que haya alguna var indep no significativa, eliminarla y diagnosticar el modelo a 
+#traves de las pruebas para los supuestos
+nombre<-c("Juan","Roberto","Alejandro","Federico","Pepe","Fernando","Ricardo", "Rodolfo","Rigo","Juan2")
+hrestudio<-c(15,12,34,50,23,43,31,15,40,22)
+inteligencia<-c(50,60,95,87,68,91,64,58,100,88)
+motivacion<-c(7,6,9,3,5,9,8,5,5,7)
+ocio<-c(8,6,12,6,9,15,11,5,4,10)
+ingreso<-c(120,200,300,150,180,220,250,100,100,500)
+
+relacion<-data.frame(hrestudio,inteligencia,motivacion,ocio,ingreso)
+modelo2<-lm(hrestudio~inteligencia+motivacion+ocio+ingreso)
+
+summary(modelo2)
+
+anova(modelo2)
