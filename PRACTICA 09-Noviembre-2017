@@ -1,0 +1,53 @@
+#SWISS
+#Medicion estandarizada de la fecundidad e indicadores socioeconomicos para cada 
+#una de las 47 provincias francesas hablantes de Suiza de 1988
+
+require(stats)
+base<-data.frame(swiss)
+#analisis exploratorio
+names(base)
+pairs(base)
+cor(base)
+
+#peopuesta Modelo de regresion multiple con base en el analisis exploratorio 
+regresion1<-lm(Infant.Mortality~fertility,data=base)
+#modelo propuesto anteriormente
+nulo<-lm(Fertility~1,data = base)
+completo<-lm(fertility~.,data=base)#lm(fertility~Infenat.mortality+education+examination+
+#agriculture+catholic)
+step(nulo,scope = list(lower=nulo,upper=completo),direction = "forward")
+summary(completo)
+help(step)
+
+
+#step=calcula los a y c, para determinar que modelo es mejor
+
+#######*************************EJERCICIO
+#######****BASE ATTITUDE****
+
+library(help="datasets")
+require(datasets);data(attitude);?attitude  
+base1<-data.frame(attitude)
+
+names(base1)
+pairs(base1)
+cor(base1)
+
+regresion2<-lm(critical~advance,data=base1)
+
+nulo1<-lm(advance~1,data = base1)
+completo1<-lm(advance~.,data=base1)
+step(nulo1,scope = list(lower=nulo1,upper=completo1),direction = "forward")
+summary(completo1)
+help(step)
+
+### Con el metodo utilizado enteriormente nos podemos dar cuenta que
+### el AIC con menor valor es el de 126.59, el cual corresponde a
+### advance ~ raises + rating + learning, el cual es el mejor modelo
+### a utilizar.
+
+### Con nuestro summary, obtenemos una r2 de 0.5186
+### y una r ajustada de 0.3931 la cual representa un 39.31% 
+### de la variabilidad del modelo
+### Un valor de p-value de 0.005865 que es menor a 0.05 nos
+### indica que el modelo es mejor al basico
