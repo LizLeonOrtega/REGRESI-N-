@@ -1,0 +1,65 @@
+#************** TAREA 10 DE NOVIEMBRE DE 2016 ***********
+#************************** MRM *************************
+#***************** LEON ORTEGA LIZBETH ******************
+
+#Se hace uso de la base de batos "Seatbelts"
+basel<-data.frame(Seatbelts)
+View(basel)
+names(basel)
+pairs(basel)
+cor(basel)
+
+#Aplicando el modelo nulo, con la variable "drivers"
+nulo <- lm(drivers ~ 1, data = basel)
+summary(nulo)
+
+#Ahora con el modelo completo
+completo <- lm(drivers ~ ., data = basel)
+summary(completo)
+
+#Aplicando el step
+step(nulo,scope=list(lower=nulo,upper=completo),direction = "forward")
+
+###En este modelo tomamos en consideracion a drivers como la v.dependiente e 
+###independientes las demas, cuando se aplica el modelo nulo se obtiene un AIC
+###de 2177.72, si a este modelo nulo le sumamos la variable DriversKilled logramos
+###obtener un AIC de 1880.06, para el siguiente que es drivers ~ DriversKilled + front
+###obtenemos un AIC de 1811.08, prosiguiendo hasta nuestro modelo completo
+###drivers ~ DriversKilled + front + rear + law + VanKilled donde se obtiene
+### AIC= 1758.53 teniendo aso el mejor modelo de las combinaciones anteriores realizadas
+
+modl<- lm(drivers ~ DriversKilled + front + rear + law + VanKilled, data = basel) 
+summary(modl)
+
+#Se obtiene un r ajustada de 0.8736 que representa la variabiliadad del modelo
+#el error estandar es de 103 con 186 grados de libertad, el p-value es de 2.2 e-16
+#lo cual indica que esta muy por debajo de 0.05, rechazando asi la h0
+#El estadistico F se posiciona en 265 que es mucho mayor a 1 e indica un buen modelo
+
+#************* PRUEBA DE LOS SUPUESTOS *************************
+
+#PRUEBA DE SHAPIRO
+
+shapiro.test(rstudent(modl))#En esta prueba se obtiene un p-value de 0.9973
+
+#PRUEBA BREAUSCH
+library(lmtest)
+require(lmtest)
+bptest(modl)#El p-value en esta segunda prueba es de 0.0298 que es < 0.005
+
+#PRUEBA DE INDEPENDENCIA
+dwtest(modl, alternative = "two.sided")#Con un p-value de 0.00276 y Dw=1.60
+                                       #que es mayor a 0.005
+
+coefficients(modl)
+
+#*********** INTERPRETACION
+
+#Para la primera pruba se obtiene w=0.0073, p-value de 0.9973>0.005 lo cual 
+#implica que se rechza la hipotesis nula
+
+#Con la segunda prueba se obtiene un BP=12.39, ademas se cumple el supuesto
+#de correlacion ya que el p-value=0.0298<0.05 que implica que se rechaza la 
+#hipotesis nula
+
+#La tercera prueba indica que o cumple la independencia ya que DW=1.60>0.05
