@@ -1,0 +1,115 @@
+*/*/*/*/*/*/*/*/*/*/*/*/*/* 23 DE NOVIEMBRE DE 2017 */*/*/*/*/*/*/*/*/*/*/*/*/
+
+#*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/ PRIMER EJERCICIO */*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+Tasa.Respiracion<-c(71,53,55,48,69,84,21,68,68)
+Potasio<-c(388,258,292,205,449,331,114,580,622)
+Zinc<-c(2414,10693,11682,12560,2464,2607,16250,2005,1825)
+
+Estudio<-data.frame(Tasa.Respiracion,Potasio,Zinc)
+pairs(Estudio)
+cor(Estudio)
+
+regnull<-lm(Tasa.Respiracion~1,data=Estudio)
+
+allreg<-lm(Tasa.Respiracion~.,data=Estudio)
+
+step(regnull,scope = list(lower=regnull,upper=allreg),direction = "forward")
+#%%%%%%%%%%%%%%%% LIMITES PARA PREDECIR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+limestudio<-seq(min(Estudio$Zinc),max(Estudio$Zinc),length=9)
+limestudio<-data.frame(limestudio)
+limestudio
+limestud<-predict.lm(allreg,limestudio,interval = "prediction",se.fit = TRUE,data=Estudio)#fit= es el valor ajustado de la tasa de respiracion del modelo de regresion
+head(limestud$fit) #esta genera los limites
+#para dibujar los limites
+matplot(limestudio,limestud$fit,type = "l")
+#%%%%%% predicciones
+#newdata=data.frame()
+#names(Estudio)
+
+predict(allreg,data.frame(Zinc=10000,Potasio=40),interval = 'predict')
+
+#################%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/ SEGUNDO EJERCICIO */*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+peso<-c(74,92,63,58,78,85,85,73,62,80,72,74)
+altura<-c(168,196,170,175,162,169,190,186,176,170,176,179)
+ritmo<-c(62,75,60,71,66,62,79,74,70,66,71,69)
+edad<-c(25,31,29,64,44,41,37,35,34,29,19,50)
+
+EstudioC<-data.frame(peso,altura,ritmo,edad)
+pairs(EstudioC)
+cor(EstudioC)
+
+nulo<-lm(ritmo~1,data=EstudioC)
+
+completo<-lm(ritmo~.,data=EstudioC)
+
+step(nulo,scope = list(lower=nulo,upper=completo),direction = "forward")
+#%%%%%%%%%%%%%%%%%%%%%%%%%
+limestudio1<-seq(min(EstudioC$peso),max(EstudioC$peso),length=12)
+limestudio2<-seq(min(EstudioC$altura),max(EstudioC$altura),length=12)
+limestudio3<-seq(min(EstudioC$edad),max(EstudioC$edad),length=12)
+limestudioC<-data.frame(limestudio1,limestudio2,limestudio3)
+limestudioC
+limestudC<-predict.lm(completo,limestudioC,interval = "prediction",se.fit = TRUE,data=EstudioC)#fit= es el valor ajustado de la tasa de respiracion del modelo de regresion
+head(limestudC$fit) #esta genera los limites
+#para dibujar los limites
+matplot(limestudioC,limestudC$fit,type = "l")
+#%%%%%% predicciones
+#newdata=data.frame()
+#names(Estudio)
+
+predict(completo,data.frame(peso=60,altura=190,edad=61),interval = 'predict')
+
+#*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/ TERCER EJERCICIO */*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+#ANALISIS DE ENTREGA DE PRODUCTOS
+#Se utiliza el tiempo de var dependiente, para decirle a los clientes cuanto
+#va a tardar en llegar el producto. Saben que las var que impactan en el
+#tiempo de entrega son la distancia y el #de cajas
+
+#Tiempo es la variable dependiente
+N.Cajas<-c(10,15,10,20,25,18,12,14,16,22,24,17,13,30,24)
+Distancia<-c(30,25,40,18,22,31,26,34,29,37,20,25,27,23,33)
+Tiempo<-c(24,27,29,31,25,33,26,28,31,39,33,30,25,42,40)
+
+EstudioT<-data.frame(N.Cajas,Distancia,Tiempo)
+pairs(EstudioT)
+cor(EstudioT)
+
+regnul<-lm(Tiempo~1,data=EstudioT)
+
+alreg<-lm(Tiempo~.,data=EstudioT)
+
+step(regnul,scope = list(lower=regnul,upper=alreg),direction = "forward")
+
+modT<-lm(Tiempo ~ N.Cajas + Distancia,data = EstudioT)
+summary(modT)
+
+#*** PRUEBAS 
+shapiro.test(rstudent(modT))
+require(lmtest)
+bptest(modT)
+dwtest(modT,alternative="two.sided")
+
+summary(modT)
+
+#Como no se cumple la prueba de shapiro, se hara lo siguiente
+
+install.packages("car")#se necesita de esta libreria
+require(car)
+outlierTest(modT,cutoff=.05,n.max=5,order=T)
+influencePlot(modT,id.n=5)
+#La observacion 5 indican con problemas
+#ahora para confirmar los casos que tienen implicaciones
+#en el modelo se aplica el grafico de distancia de cook
+cmod2<-cooks.distance(modT)
+#etique<-renames(ejer)
+install.packages("faraway")
+require(faraway)
+halfnorm(cmod2,ylad="dist cook")
+#Aqui esperariamos un dato mayor a 1 para comprobar que si es atipico
+#el numero mas alto es el 5 por lo que ahora una solucion es eliminarlo
+#y volver a aplicar shapíro test
+
+#TAREA: Realizar la eliminacion (no manual) y volver a realizar y si
+#pasa la shapiro, realizamos las predicciones
