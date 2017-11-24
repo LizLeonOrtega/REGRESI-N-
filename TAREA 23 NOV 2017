@@ -1,0 +1,91 @@
+#*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/ TERCER EJERCICIO */*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+#ANALISIS DE ENTREGA DE PRODUCTOS
+#Se utiliza el tiempo de var dependiente, para decirle a los clientes cuanto
+#va a tardar en llegar el producto. Saben que las var que impactan en el
+#tiempo de entrega son la distancia y el #de cajas
+
+#Tiempo es la variable dependiente
+N.Cajas<-c(10,15,10,20,25,18,12,14,16,22,24,17,13,30,24)
+Distancia<-c(30,25,40,18,22,31,26,34,29,37,20,25,27,23,33)
+Tiempo<-c(24,27,29,31,25,33,26,28,31,39,33,30,25,42,40)
+
+EstudioT<-data.frame(N.Cajas,Distancia,Tiempo)
+pairs(EstudioT)
+cor(EstudioT)
+
+regnul<-lm(Tiempo~1,data=EstudioT)
+
+alreg<-lm(Tiempo~.,data=EstudioT)
+
+step(regnul,scope = list(lower=regnul,upper=alreg),direction = "forward")
+
+modT<-lm(Tiempo ~ N.Cajas + Distancia,data = EstudioT)
+summary(modT)
+
+#*** PRUEBAS 
+shapiro.test(rstudent(modT))
+install.packages("lmtest")
+require(lmtest)
+bptest(modT)
+dwtest(modT,alternative="two.sided")
+
+summary(modT)
+
+#Como no se cumple la prueba de shapiro, se hara lo siguiente
+
+install.packages("car")#se necesita de esta libreria
+require(car)
+outlierTest(modT,cutoff=.05,n.max=5,order=T)
+influencePlot(modT,id.n=5)
+#La observacion 5 indican con problemas
+#ahora para confirmar los casos que tienen implicaciones
+#en el modelo se aplica el grafico de distancia de cook
+cmod2<-cooks.distance(modT)
+#etique<-renames(ejer)
+install.packages("faraway")
+require(faraway)
+halfnorm(cmod2,ylad="dist cook")
+#Aqui esperariamos un dato mayor a 1 para comprobar que si es atipico
+#el numero mas alto es el 5 por lo que ahora una solucion es eliminarlo
+#y volver a aplicar shapíro test
+
+#TAREA: Realizar la eliminacion (no manual) y volver a realizar y si
+#pasa la shapiro, realizamos las predicciones
+EstudioT<-EstudioT[-5,] 
+EstudioT
+
+pairs(EstudioT)
+cor(EstudioT)
+
+regnul<-lm(Tiempo~1,data=EstudioT)
+
+alreg<-lm(Tiempo~.,data=EstudioT)
+
+step(regnul,scope = list(lower=regnul,upper=alreg),direction = "forward")
+
+modT<-lm(Tiempo ~ N.Cajas + Distancia,data = EstudioT)
+summary(modT)
+
+#*** PRUEBAS 
+shapiro.test(rstudent(modT))
+install.packages("lmtest")
+require(lmtest)
+bptest(modT)
+dwtest(modT,alternative="two.sided")
+
+summary(modT)
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%
+limestudio1T<-seq(min(EstudioT$N.Cajas),max(EstudioT$N.Cajas),length=15)
+limestudio2T<-seq(min(EstudioT$Distancia),max(EstudioT$Distancia),length=15)
+limestudio3T<-seq(min(EstudioT$Tiempo),max(EstudioT$Tiempo),length=15)
+limestudioT<-data.frame(limestudio1T,limestudio2T,limestudio3T)
+limestudioT
+limestudT<-predict.lm(alreg,limestudioT,interval = "prediction",se.fit = TRUE,data=EstudioT)#fit= es el valor ajustado de la tasa de respiracion del modelo de regresion
+head(limestudT$fit) #esta genera los limites
+#para dibujar los limites
+matplot(limestudioT,limestudT$fit,type = "l")
+#%%%%%% predicciones
+
+#predict(alreg,data.frame(N.Cajas=***,Distancia=***,Tiempo=***),interval = 'predict')
+
