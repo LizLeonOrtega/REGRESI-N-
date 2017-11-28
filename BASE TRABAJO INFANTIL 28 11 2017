@@ -1,0 +1,47 @@
+require("foreign")
+base6<-(read.spss("C:/Users/Sala-D15/Downloads/solorural.sav"))
+names(base6)
+
+#Niñ@ de 5 a 17 años de zonas rurales
+#Encuesta Modulo de trabajo infantil INEGI, 2013
+#Variable dependiente 
+
+#Variable Dep= Personas para la que trabaja el dia (T_PER)
+#Categorias:
+#1.- Familiar
+#2.- No mamiliar
+#3.- Cuenta Prop
+
+#Variable Indep
+#1)SEX0 (SEX)
+#1.- HOMBRE
+#2.- MUJER)
+
+#2)GRUPO DE EDAD 
+#1.- 5 A 9
+#2.- 10 A 13
+#3.- 14 A 17)
+
+#3)JEFE DE HOGAR 
+#1.- HOMBRE
+#2.- MUJER)
+
+#4) TAMAÑO HOGAR (TAM_HOG)
+#1.- 1 A 3 personas
+#2.- 4 a 5 "
+#3.- 6 a 7 "
+#4.- 8 y mas "
+
+#5) OCUPACION JEFE HOGAR (OCU_JEFE)
+#1.- OCUPADO
+#2.- DESOCUPADO
+
+#6)TIPO DE APOYO RECIVIDO (T_APO1) 
+#1.- Beca para estudiar
+#2.- Programa gobierno
+#3.-Ayuda Familiar
+#4.-Otro tipo de ayuda
+#5.- N o recive
+
+#Categoria de referencia es con la que se va a contrarestar
+#Categoria 
